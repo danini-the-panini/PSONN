@@ -133,6 +133,10 @@ public class DataSet
             
             patterns = plist.toArray(new Pattern[0]);
         }
+        catch (Exception e)
+        {
+            throw new IOException(file.getName() + " (Not a valid DataSet)");
+        }
         finally
         {
             in.close();

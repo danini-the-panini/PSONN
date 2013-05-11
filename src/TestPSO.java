@@ -17,5 +17,17 @@ public class TestPSO extends PSO
         double y = values[1] + 2;
         return x*x + y*y;
     }
+
+    @Override
+    protected void outputStatistics(int i, double[] values)
+    {
+        // do nothing
+    }
+
+    @Override
+    protected void finalise(double[] values)
+    {
+        // do nothing
+    }
     
 }

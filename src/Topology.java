@@ -50,6 +50,11 @@ public abstract class Topology
             this.neighbourhood = neighbourhood;
         }
 
+        public void setNeighbourhood(int neighbourhood)
+        {
+            this.neighbourhood = neighbourhood;
+        }
+
         @Override
         public void setPopulation(Particle[] population)
         {

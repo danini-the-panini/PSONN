@@ -1,4 +1,7 @@
 
+import java.io.PrintWriter;
+
+
 /**
  * Generic Particle Swarm Optimisation Algorithm.
  * To utilise, create a subclass of this class, and override the getFitness(double[]) function.
@@ -15,12 +18,18 @@ public abstract class PSO
     
     private Topology topology;
     
+    protected PrintWriter writer = null;
+    
     /**
      * Gets the fitness of a particular vector.
      * @param v The vector to calculate the fitness of.
      * @return The fitness of the vector.
      */
     protected abstract double getFitness(double[] values);
+    
+    protected abstract void outputStatistics(int i, double[] values);
+    
+    protected abstract void finalise(double[] values);
     
     // update each particle's fitness using the overridden getFitness function.
     private void updateFitness()
@@ -31,8 +40,6 @@ public abstract class PSO
             particles[j].updateFitness(fitness);
         }
         topology.update();
-        
-        //printBest();
     }
 
     /**
@@ -79,16 +86,33 @@ public abstract class PSO
         updateFitness();
         
         // commence particle swarm optimisation!
-        for (int i = 0; i < maxIterations; i++)
+        for (int i = 1; i <= maxIterations; i++)
         {
             // update each particle's position
             for (int j = 0; j < particles.length; j++)
+            {
                 particles[j].update(w, c1, c2, vmax, topology.getBest(j));
+            }
             
             updateFitness();
+            
+            outputStatistics(i, getCurrentBestParticle().getValues());
         }
         
-        printBest();
+        finalise(getBestParticle().getBestValues());
+        
+        writer.flush();
+    }
+    
+    public Particle getCurrentBestParticle()
+    {
+        int best = 0;
+        for (int i = 0; i < particles.length; i++)
+        {
+            if (particles[i].getFitness() < particles[best].getFitness())
+                best = i;
+        }
+        return particles[best];
     }
     
     public Particle getBestParticle()
@@ -101,18 +125,13 @@ public abstract class PSO
         }
         return particles[best];
     }
-    
-    double lastBest = Double.POSITIVE_INFINITY;
-    public void printBest()
+
+    /**
+     * Sets a destination to output the PSO's training statistics.
+     * @param writer 
+     */
+    public void setWriter(PrintWriter writer)
     {
-        Particle p = getBestParticle();
-        double pbest = p.getBestFitness();
-        
-        double[] x = p.getBestValues();
-        
-        System.out.print("fitness: " + pbest + ", v = ");
-        for (int i = 0; i < x.length; i++)
-            System.out.print(x[i] + (i == x.length-1 ? "." : ", "));
-        System.out.println();
+        this.writer = writer;
     }
 }
