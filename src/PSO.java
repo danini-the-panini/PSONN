@@ -101,7 +101,8 @@ public abstract class PSO
         
         finalise(getBestParticle().getBestValues());
         
-        writer.flush();
+        if (writer != null)
+            writer.flush();
     }
     
     public Particle getCurrentBestParticle()

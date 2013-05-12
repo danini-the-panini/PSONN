@@ -28,5 +28,16 @@ public abstract class Function
         
     }
     
+    public static class Perceptron extends Function
+    {
+
+        @Override
+        public double f(double x)
+        {
+            return x < 0 ? 0 : 1;
+        }
+        
+    }
+    
     
 }

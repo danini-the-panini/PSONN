@@ -66,7 +66,7 @@ public class NeuralNetwork
         {
             DataSet.Pattern pattern = dataSet.getPattern(p);
             
-            double[] output = run(pattern);
+            double[] output = run(pattern.getInputs());
             
             MSE += meanSquared(output, pattern.getOutput());
             
@@ -92,13 +92,13 @@ public class NeuralNetwork
     
     /**
      * Run the neural network on a single pattern.
-     * @param pattern
+     * @param input
      * @return The output values.
      */
-    public double[] run(DataSet.Pattern pattern)
+    public double[] run(double[] input)
     {
         double[] hiddenValues = new double[numHiddenUnits];
-        hiddenValues[numHiddenUnits-1] = -1; // bias unit
+        hiddenValues[numHiddenUnits-1] = -1; // last one is bias unit
 
         // Do input layer -> hidden layer
         for (int j = 0; j < numHiddenUnits-1; j++) // -1 for hidden bias unit
@@ -107,7 +107,7 @@ public class NeuralNetwork
             for (int i = 0; i < numInputs; i++)
             {
                 // if it's the last one, it's the bias unit.
-                double x = i == numInputs-1 ? -1 : pattern.getInput(i);
+                double x = i == numInputs-1 ? -1 : input[i];
 
                 hiddenValues[j] += x * inputWeights[i][j];
             }
@@ -141,15 +141,13 @@ public class NeuralNetwork
         
         // set the weights between input and hidden (inputs)*(hidden-1)
         for (int i = 0; i < numInputs; i++)
-        {
-            System.arraycopy(weights, i*(numHiddenUnits-1), inputWeights[i], 0, numHiddenUnits-1);
-        }
+            System.arraycopy(weights, i*(numHiddenUnits-1),
+                    inputWeights[i], 0, numHiddenUnits-1);
+            
         // set the wights between hidden and output (hidden)*(output)
         for (int j = 0; j < numHiddenUnits; j++)
-        {
             System.arraycopy(weights, numInputs*(numHiddenUnits-1)+j*numOutputs,
                     hiddenWeights[j], 0, numOutputs);
-        }
     }
     
     public int getNumWeights()

@@ -32,6 +32,11 @@ public class DataSet
         {
             return inputs[i];
         }
+
+        public double[] getInputs()
+        {
+            return inputs;
+        }
         
         public int getOutputIndex()
         {
