@@ -107,13 +107,14 @@ public class Main
     {
         
         String filename = read("Enter the path to a data file.");
+	String outFilename = filename + ".results";
         
         DataSet data = null;
         PrintWriter writer = null;
         try
         {
             data = new DataSet(new File(filename));
-            writer = new PrintWriter(filename+".results");
+            writer = new PrintWriter(outFilename);
         } catch (IOException ex)
         {
             System.out.println("Error reading file: " + ex.getMessage());
@@ -177,5 +178,7 @@ public class Main
         tstat = pso.getTestingStatistic();
         System.out.println("Test result:");
         System.out.printf("\tMSE: %g\n\tAccuracy: %.1f%%\n", tstat.getMeanSquaredError(), tstat.getAccuracy()*100);
+
+	System.out.println("Full output written to " + outFilename + ".");
     }
 }
